@@ -56,7 +56,7 @@ const deletePost = (postId) => {
                 <div
                     v-for="post in posts"
                     :key="post.id"
-                    class="group bg-white shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border border-gray-300 rounded-lg overflow-hidden"
+                    class="group bg-white shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border border-gray-800 rounded-lg overflow-hidden"
                 >
                     <div class="p-6">
                         <h3
