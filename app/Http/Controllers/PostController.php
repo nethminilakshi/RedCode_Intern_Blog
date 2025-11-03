@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Post;
+use App\Http\Requests\StorePostRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -22,17 +23,13 @@ class PostController extends Controller
         return Inertia::render('Posts/Create');
     }
 
-     public function store(Request $request)
+     public function store(StorePostRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-        ]);
+            Post::create($request->validated());
 
-        Post::create($validated);
 
-        return redirect()->route('posts.index')
-            ->with('success', 'Post created successfully!');
+            return redirect()->route('posts.index')
+                ->with('success', 'Post created successfully!');
     }
 // show edit form
     public function edit(Post $post){
@@ -42,14 +39,9 @@ class PostController extends Controller
         ]);
     }
 
-    public function update(Request $request, Post $post)
+    public function update(StorePostRequest $request, Post $post)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-        ]);
-
-        $post->update($validated);
+       $post->update($request->validated());
 
         return redirect()->route('posts.index')
             ->with('success', 'Post updated successfully!');
