@@ -8,6 +8,7 @@ import TextInput from "@/Components/TextInput.vue";
 const form = useForm({
     title: "",
     content: "",
+    category_id: "",
 });
 
 const submit = () => {
@@ -52,6 +53,31 @@ const submit = () => {
                             <InputError
                                 class="mt-2"
                                 :message="form.errors.title"
+                            />
+                        </div>
+
+                        <!-- Category -->
+                        <div>
+                            <InputLabel for="category_id" value="Category *" />
+                            <select
+                                id="category_id"
+                                v-model="form.category_id"
+                                class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            >
+                                <option value="" selected disabled>
+                                    Select a category
+                                </option>
+                                <option
+                                    v-for="category in $page.props.categories"
+                                    :key="category.id"
+                                    :value="category.id"
+                                >
+                                    {{ category.name }}
+                                </option>
+                            </select>
+                            <InputError
+                                class="mt-2"
+                                :message="form.errors.category_id"
                             />
                         </div>
 

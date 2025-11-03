@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Post;
+use App\Models\Category;
 use App\Http\Requests\StorePostRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -20,7 +21,9 @@ class PostController extends Controller
     // create form
      public function create()
     {
-        return Inertia::render('Posts/Create');
+        return Inertia::render('Posts/Create', [
+            'categories' => Category::all()
+        ]);
     }
 
      public function store(StorePostRequest $request)
@@ -32,10 +35,12 @@ class PostController extends Controller
                 ->with('success', 'Post created successfully!');
     }
 // show edit form
-    public function edit(Post $post){
-        return Inertia::render('Posts/Edit',[
-            'post' => $post
-
+    public function edit(Post $post)
+    {
+        $post->load('category');
+        return Inertia::render('Posts/Edit', [
+            'post' => $post,
+            'categories' => Category::all()
         ]);
     }
 

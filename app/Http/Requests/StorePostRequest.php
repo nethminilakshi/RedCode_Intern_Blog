@@ -16,6 +16,7 @@ class StorePostRequest extends FormRequest
         return [
             'title' => 'required|string|max:255|min:3',
             'content' => 'required|string|min:10',
+            'category_id' => 'required|exists:categories,id',
         ];
     }
 
@@ -26,6 +27,8 @@ class StorePostRequest extends FormRequest
             'title.min' => 'Title must be at least 3 characters.',
             'content.required' => 'Content is required.',
             'content.min' => 'Content must be at least 10 characters.',
+            'category_id.required' => 'Category is required.',
+            'category_id.exists' => 'Category does not exist.',
         ];
     }
 }
