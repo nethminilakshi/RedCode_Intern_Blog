@@ -74,6 +74,20 @@ const deletePost = (postId) => {
                             </span>
                         </div>
 
+                        <!-- Tags Display -->
+                        <div
+                            v-if="post.tags && post.tags.length > 0"
+                            class="mb-3 flex flex-wrap gap-2"
+                        >
+                            <span
+                                v-for="tag in post.tags"
+                                :key="tag.id"
+                                class="px-2 py-1 bg-pink-100 text-pink-700 text-xs rounded-full"
+                            >
+                                #{{ tag.name }}
+                            </span>
+                        </div>
+
                         <p class="text-gray-600 mb-4 line-clamp-3">
                             {{ post.content }}
                         </p>

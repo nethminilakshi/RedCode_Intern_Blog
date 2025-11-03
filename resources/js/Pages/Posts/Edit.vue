@@ -4,22 +4,39 @@ import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
+import { ref } from "vue";
 
 const props = defineProps({
     post: Object,
     categories: Array,
+    allTags: Array,
 });
 
 const form = useForm({
     title: props.post.title,
     content: props.post.content,
     category_id: props.post.category_id,
+    tags: props.post.tags.map((tag) => tag.name),
 });
+
+const tagInput = ref("");
+
+const addTag = () => {
+    const tag = tagInput.value.trim();
+    if (tag && !form.tags.includes(tag)) {
+        form.tags.push(tag);
+        tagInput.value = "";
+    }
+};
+
+const removeTag = (index) => {
+    form.tags.splice(index, 1);
+};
 
 const submit = () => {
     form.put(route("posts.update", props.post.id), {
         onSuccess: () => {
-            form.reset();
+            // Keep form data after success
         },
     });
 };
@@ -83,6 +100,52 @@ const submit = () => {
                             <InputError
                                 class="mt-2"
                                 :message="form.errors.category_id"
+                            />
+                        </div>
+
+                        <!-- Tags -->
+                        <div>
+                            <InputLabel for="tags" value="Tags" />
+                            <div class="mt-1 flex gap-2">
+                                <input
+                                    v-model="tagInput"
+                                    @keydown.enter.prevent="addTag"
+                                    type="text"
+                                    class="flex-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                    placeholder="Type a tag and press Enter"
+                                />
+                                <button
+                                    @click.prevent="addTag"
+                                    type="button"
+                                    class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                                >
+                                    Add
+                                </button>
+                            </div>
+
+                            <!-- Display tags -->
+                            <div
+                                v-if="form.tags.length > 0"
+                                class="mt-3 flex flex-wrap gap-2"
+                            >
+                                <span
+                                    v-for="(tag, index) in form.tags"
+                                    :key="index"
+                                    class="inline-flex items-center gap-1 px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm"
+                                >
+                                    {{ tag }}
+                                    <button
+                                        @click="removeTag(index)"
+                                        type="button"
+                                        class="hover:text-indigo-900"
+                                    >
+                                        ×
+                                    </button>
+                                </span>
+                            </div>
+                            <InputError
+                                class="mt-2"
+                                :message="form.errors.tags"
                             />
                         </div>
 

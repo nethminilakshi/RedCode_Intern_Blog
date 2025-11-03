@@ -14,9 +14,11 @@ class StorePostRequest extends FormRequest
     public function rules()
     {
         return [
+        
             'title' => 'required|string|max:255|min:3',
             'content' => 'required|string|min:10',
             'category_id' => 'required|exists:categories,id',
+            'tags.*' => 'nullable|string|max:50'
         ];
     }
 
@@ -29,8 +31,9 @@ class StorePostRequest extends FormRequest
             'content.min' => 'Content must be at least 10 characters.',
             'category_id.required' => 'Category is required.',
             'category_id.exists' => 'Category does not exist.',
-            'tags.*' => 'nullable|string|max:50' 
-
+            'tags.array' => 'Tags must be an array.',
+            'tags.*.string' => 'Each tag must be a string.',
+            'tags.*.max' => 'Each tag must not exceed 50 characters.',
         ];
     }
 }
