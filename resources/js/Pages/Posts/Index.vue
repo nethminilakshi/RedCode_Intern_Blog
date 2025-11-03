@@ -1,9 +1,10 @@
 <script setup>
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
-import { ref, computed } from "vue";
+import { computed } from "vue";
 
 const props = defineProps({
     posts: Array,
+    categories: Array,
 });
 
 const page = usePage();
@@ -59,11 +60,19 @@ const deletePost = (postId) => {
                     class="group bg-white shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border border-gray-800 rounded-lg overflow-hidden"
                 >
                     <div class="p-6">
-                        <h3
-                            class="text-2xl font-bold text-purple-500 mb-3 hover:text-purple-800 transition"
-                        >
-                            {{ post.title }}
-                        </h3>
+                        <div class="flex justify-between items-start mb-3">
+                            <h3
+                                class="text-2xl font-bold text-purple-500 hover:text-purple-800 transition"
+                            >
+                                {{ post.title }}
+                            </h3>
+                            <span
+                                v-if="post.category"
+                                class="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full"
+                            >
+                                {{ post.category.name }}
+                            </span>
+                        </div>
 
                         <p class="text-gray-600 mb-4 line-clamp-3">
                             {{ post.content }}

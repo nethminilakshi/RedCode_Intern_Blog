@@ -29,6 +29,8 @@ class StorePostRequest extends FormRequest
             'content.min' => 'Content must be at least 10 characters.',
             'category_id.required' => 'Category is required.',
             'category_id.exists' => 'Category does not exist.',
+            'tags.*' => 'nullable|string|max:50' 
+
         ];
     }
 }

@@ -7,11 +7,13 @@ import TextInput from "@/Components/TextInput.vue";
 
 const props = defineProps({
     post: Object,
+    categories: Array,
 });
 
 const form = useForm({
     title: props.post.title,
     content: props.post.content,
+    category_id: props.post.category_id,
 });
 
 const submit = () => {
@@ -58,6 +60,32 @@ const submit = () => {
                             />
                         </div>
 
+                        <!-- Category -->
+                        <div>
+                            <InputLabel for="category_id" value="Category *" />
+                            <select
+                                id="category_id"
+                                v-model="form.category_id"
+                                class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                required
+                            >
+                                <option value="" disabled>
+                                    Select a category
+                                </option>
+                                <option
+                                    v-for="category in categories"
+                                    :key="category.id"
+                                    :value="category.id"
+                                >
+                                    {{ category.name }}
+                                </option>
+                            </select>
+                            <InputError
+                                class="mt-2"
+                                :message="form.errors.category_id"
+                            />
+                        </div>
+
                         <!-- Content -->
                         <div>
                             <InputLabel for="content" value="Content *" />
@@ -84,7 +112,7 @@ const submit = () => {
 
                             <Link
                                 :href="route('posts.index')"
-                                class="text-gray-600 hover:text-gray-900"
+                                class="text-gray-600 hover:text-gray-900 font-medium"
                             >
                                 Cancel
                             </Link>
