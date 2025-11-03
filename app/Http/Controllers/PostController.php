@@ -15,6 +15,8 @@ class PostController extends Controller
         ]);
     }
 
+
+    // create form
      public function create()
     {
         return Inertia::render('Posts/Create');
@@ -32,11 +34,32 @@ class PostController extends Controller
         return redirect()->route('posts.index')
             ->with('success', 'Post created successfully!');
     }
+// show edit form
+    public function edit(Post $post){
+        return Inertia::render('Posts/Edit',[
+            'post' => $post
 
-    //  public function show(Post $post)
-    // {
-    //     return Inertia::render('Posts/Show', [
-    //         'post' => $post
-    //     ]);
-    // }
+        ]);
+    }
+
+    public function update(Request $request, Post $post)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+
+        $post->update($validated);
+
+        return redirect()->route('posts.index')
+            ->with('success', 'Post updated successfully!');
+    }
+
+    public function delete(Post $post){
+        $post->delete();
+
+        return redirect()->route('posts.index')
+            ->with('success', 'Post deleted successfully!');
+    }
+
 }

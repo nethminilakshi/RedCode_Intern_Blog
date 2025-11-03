@@ -1,10 +1,21 @@
 <script setup>
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
+import { ref, computed } from "vue";
 
-// Receive props from Laravel
 const props = defineProps({
     posts: Array,
 });
+
+const page = usePage();
+const successMessage = computed(() => page.props.flash?.success);
+
+const deleteForm = useForm({});
+
+const deletePost = (postId) => {
+    if (confirm("Are you sure you want to delete this post?")) {
+        deleteForm.delete(route("posts.delete", postId));
+    }
+};
 </script>
 
 <template>
@@ -13,16 +24,25 @@ const props = defineProps({
         class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50"
     >
         <div class="container mx-auto py-12 max-w-7xl sm:px-6 lg:px-8">
+            <!-- Success Message -->
+            <div
+                v-if="successMessage"
+                class="mb-6 bg-green-200 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                role="alert"
+            >
+                <span class="block sm:inline">{{ successMessage }}</span>
+            </div>
+
             <!-- Header -->
             <div class="flex justify-between items-center mb-6">
                 <h3
-                    class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-700 to-pink-500 mb-4"
+                    class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-700 to-pink-500"
                 >
                     Blog Posts
                 </h3>
                 <Link
                     :href="route('posts.create')"
-                    class="px-4 py-2 bg-red-900 text-white rounded-lg hover:bg-red-500 transition"
+                    class="px-4 py-2 bg-pink-700 text-white rounded-lg hover:bg-purple-900 transition"
                 >
                     Create New Post
                 </Link>
@@ -48,6 +68,22 @@ const props = defineProps({
                         <p class="text-gray-600 mb-4 line-clamp-3">
                             {{ post.content }}
                         </p>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-3 mt-4">
+                            <Link
+                                :href="route('posts.edit', post.id)"
+                                class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-400 transition text-sm"
+                            >
+                                Edit
+                            </Link>
+                            <button
+                                @click="deletePost(post.id)"
+                                class="px-4 py-2 bg-red-800 text-white rounded-lg hover:bg-red-500 transition text-sm"
+                            >
+                                Delete
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
