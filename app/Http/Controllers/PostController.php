@@ -12,12 +12,21 @@ use Inertia\Inertia;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with('category', 'tags')->latest()->get();
+        $query = Post::with('category', 'tags')->latest();
+
+        if ($request->has('category') && $request->category) {
+            $query->where('category_id', $request->category);
+        }
+        $posts = $query->simplePaginate(3);
+
         return Inertia::render('Posts/Index', [
-            'posts' => $posts,
+            'posts' => $posts,  
             'categories' => Category::all(),
+             'filters' => [
+                'category' => $request->category,
+            ],
         ]);
     }
 
