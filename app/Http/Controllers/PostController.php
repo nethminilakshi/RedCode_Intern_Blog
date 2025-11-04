@@ -25,13 +25,11 @@ class PostController extends Controller
     {
         return Inertia::render('Posts/Create', [
             'categories' => Category::all(),
-            'allTags' => Tag::all(),
         ]);
     }
 
     public function store(StorePostRequest $request)
     {
-        // Create the post first
         $post = Post::create($request->validated());
         
         // Handle tags - create new tags and save in tag table and pivot table
@@ -41,7 +39,6 @@ class PostController extends Controller
             foreach ($request->tags as $tagName) {
                 if (empty(trim($tagName))) continue;
                 
-                // firstOrCreate checks if tag exists, if not creates it in tags table
                 $tag = Tag::firstOrCreate(
                     ['name' => trim($tagName)],
                     ['name' => trim($tagName)]
@@ -72,20 +69,17 @@ class PostController extends Controller
 
     public function update(StorePostRequest $request, Post $post)
     {
-        // Update post basic fields
         $post->update($request->validated());
         
-        // Handle tags
         if ($request->has('tags') && is_array($request->tags)) {
             $tagIds = [];
             
             foreach ($request->tags as $tagName) {
                 if (empty(trim($tagName))) continue;
                 
-                // Create tag if it doesn't exist
                 $tag = Tag::firstOrCreate(
                     ['name' => trim($tagName)],
-                    ['description' => trim($tagName)]
+                    ['name' => trim($tagName)]
                 );
                 
                 $tagIds[] = $tag->id;
